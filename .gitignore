@@ -1,0 +1,4 @@
+**/__pycache__
+aws-credentials
+azure-credentials
+db-credentials
