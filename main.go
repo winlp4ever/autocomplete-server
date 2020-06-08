@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/cors"
 	"github.com/gofiber/fiber"
+	"github.com/winlp4ever/autocomplete-server/cache"
 	"github.com/winlp4ever/autocomplete-server/es"
 )
 
@@ -33,6 +34,7 @@ func postHints(c *fiber.Ctx) {
 
 func main() {
 	fmt.Println("ok")
+	cache.TestRedis()
 	e = es.NewEs()
 
 	app := fiber.New()

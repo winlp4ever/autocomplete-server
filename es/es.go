@@ -8,11 +8,14 @@ import (
 	"log"
 
 	elasticsearch "github.com/elastic/go-elasticsearch/v8"
+	. "github.com/winlp4ever/autocomplete-server/cache"
+	. "github.com/winlp4ever/autocomplete-server/hint"
 )
 
 // Elastic Search Struct, init once with server
 type Es struct {
 	esClient *elasticsearch.Client
+	cache *Cache
 }
 
 // Es Default Constructor
@@ -24,6 +27,7 @@ func NewEs() *Es {
 		log.Fatalf("Error creating the client: %s", err)
 	}
 	es.esClient = e
+	es.cache = NewCache()
 	return es
 }
 
@@ -34,6 +38,10 @@ func (e *Es) Info() {
 
 // Return hints of a question q by query for similar questions in elasticsearch db
 func (es *Es) GetHints(q string) []Hint {
+	hints, err := es.cache.Get(q)
+	if err == nil {
+		return hints
+	}
 
 	var (
 		r  map[string]interface{}	  
@@ -122,6 +130,6 @@ func (es *Es) GetHints(q string) []Hint {
 			reps[rep_] = 1
 		}
 	}
-
+	es.cache.Set(q, results)
 	return results
 }
