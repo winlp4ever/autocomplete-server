@@ -235,7 +235,7 @@ try:
         try:
             st = time.time()
             qs = simQuestions(question)
-            print('search-time : %f' % (time.time()-st))
+            print('total-search-time : %f' % (time.time()-st))
         except Exception as e:
             print(e)
             qs = []

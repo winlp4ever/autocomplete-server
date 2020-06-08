@@ -18,11 +18,11 @@ class SimiSearch:
         q: question that needs searching for similar questions
         topk: nb of top results returned
         """
-        
-        tks = self.tk.tokenize([q])
         embedding_start = time.time()
+        #tks = self.tk.tokenize([q])
         
-        query_vector = self.bc.encode(tks)
+        
+        query_vector = self.bc.encode([q.lower()])
            
         query_vector = query_vector[0].tolist()
         embedding_time = time.time() - embedding_start
@@ -50,7 +50,7 @@ class SimiSearch:
             }
         }
 
-        #print('encoding time: {}'.format(embedding_time))
+        print('encoding time: {}'.format(embedding_time))
 
         search_start = time.time()
         response = self.es.search(
@@ -63,10 +63,11 @@ class SimiSearch:
         )
 
         search_time = time.time() - search_start
-        #print('search time: {}'.format(search_time))
+        print('search time: {}'.format(search_time))
 
         res = []
         reps = []
+        fm_st = time.time()
         for r in response['hits']['hits'][:topk]:
             if r['_source']['rep'] not in reps:
                 reps.append(r['_source']['rep'])
@@ -76,6 +77,7 @@ class SimiSearch:
                     'score': r['_score'],
                     'rep': r['_source']['rep']
                 })
+        print('format time %f' % (time.time() - fm_st))
         return res
     
 
