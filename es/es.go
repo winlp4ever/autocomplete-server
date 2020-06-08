@@ -16,8 +16,8 @@ type Es struct {
 }
 
 // Es Default Constructor
-func NewEs() Es {
-	es := Es{}
+func NewEs() *Es {
+	es := new(Es)
 	e, err := elasticsearch.NewDefaultClient()
 	// If err, raise error and return
 	if err != nil {
@@ -106,7 +106,7 @@ func (es *Es) GetHints(q string) []Hint {
 	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
 		doc := hit.(map[string]interface{})["_source"]
 
-		reps = append(reps, NewHint(
+		reps = append(reps, *NewHint(
 			int(doc.(map[string]interface{})["id"].(float64)), 
 			doc.(map[string]interface{})["text"].(string),
 			float32(hit.(map[string]interface{})["_score"].(float64)),

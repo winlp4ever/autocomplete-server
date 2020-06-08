@@ -15,7 +15,7 @@ type TypedQuestion struct {
 	Timestamp int64 `json:"timestamp"`
 }
 
-var e es.Es
+var e *es.Es
 
 func postHints(c *fiber.Ctx) {
 	var msg TypedQuestion

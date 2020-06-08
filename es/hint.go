@@ -7,8 +7,8 @@ type Hint struct {
 }
 
 // default constructor
-func NewHint(id int, text string, score float32) Hint {
-	hint := Hint{}
+func NewHint(id int, text string, score float32) *Hint {
+	hint := new(Hint)
 	hint.Id = id 
 	hint.Text = text 
 	hint.Score = score 
