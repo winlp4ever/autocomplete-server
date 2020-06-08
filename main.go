@@ -15,14 +15,15 @@ type TypedQuestion struct {
 	Timestamp int64 `json:"timestamp"`
 }
 
+// Global ES variable
 var e *es.Es
 
+// Callback function when receiving POST request for question hints (autocomplete feature)
 func postHints(c *fiber.Ctx) {
 	var msg TypedQuestion
 	json.Unmarshal([]byte(c.Body()), &msg)
 	
 	hs := e.GetHints(msg.Typing)
-	fmt.Println(hs)
 	c.JSON(fiber.Map{
 		"hints": hs,
 		"conversationID": msg.ConversationID,

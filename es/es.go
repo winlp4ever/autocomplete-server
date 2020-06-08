@@ -102,16 +102,26 @@ func (es *Es) GetHints(q string) []Hint {
 		int(r["took"].(float64)),
 	)
 
-	reps := []Hint{}
+	results := []Hint{}
+	reps := make(map[string]int)
+
 	for _, hit := range r["hits"].(map[string]interface{})["hits"].([]interface{}) {
 		doc := hit.(map[string]interface{})["_source"]
-
-		reps = append(reps, *NewHint(
-			int(doc.(map[string]interface{})["id"].(float64)), 
-			doc.(map[string]interface{})["text"].(string),
-			float32(hit.(map[string]interface{})["_score"].(float64)),
-		))
+		rep := doc.(map[string]interface{})["rep"]
+		rep_ := "-"
+		if rep != nil {
+			rep_ = rep.(string)
+		}
+		if _, ok := reps[rep_]; !ok {
+			results = append(results, *NewHint(
+				int(doc.(map[string]interface{})["id"].(float64)), 
+				doc.(map[string]interface{})["text"].(string),
+				float32(hit.(map[string]interface{})["_score"].(float64)),
+				rep_,
+			))
+			reps[rep_] = 1
+		}
 	}
 
-	return reps
+	return results
 }
